@@ -312,6 +312,55 @@ class FacebookBot {
                 });
 
             this.doApiAiRequest(apiaiRequest, sender);
+            
+            this.userInfoRequest(sender)
+            .then((userInfo)=> {
+                let apiaiRequest = this.apiAiService.textRequest(text,
+                    {
+                        sessionId: this.sessionIds.get(sender),
+                        contexts: [
+                            {
+                                name: "generic",
+                                parameters: {
+                                    facebook_user_name: userInfo.first_name
+                                }
+                            }
+                        ]
+                    });
+
+                apiaiRequest.on('response', (response) => {
+                    if (this.isDefined(response.result)) {
+                        let responseText = response.result.fulfillment.speech;
+                        let responseData = response.result.fulfillment.data;
+                        let action = response.result.action;
+
+                        if (this.isDefined(responseData) && this.isDefined(responseData.facebook)) {
+                            try {
+                                console.log('Response as formatted message');
+                                this.sendFBMessage(sender, responseData.facebook);
+                            } catch (err) {
+                                this.sendFBMessage(sender, {text: err.message});
+                            }
+                        } else if (this.isDefined(responseText)) {
+                            console.log('Response as text message');
+                            // facebook API limit for text length is 320,
+                            // so we split message if needed
+                            var splittedText = this.splitResponse(responseText);
+
+                            async.eachSeries(splittedText, (textPart, callback) => {
+                                this.sendFBMessage(sender, {text: textPart}, callback);
+                            });
+                        }
+
+                    }
+                });
+
+                apiaiRequest.on('error', (error) => console.error(error));
+                apiaiRequest.end();
+
+            }).catch(err=> {
+                console.error(err);
+            });
         }
     }
 
@@ -477,7 +526,24 @@ class FacebookBot {
             setTimeout(() => resolve(), delay);
         });
     }
-
+        
+    function userInfoRequest(userId) {
+        return new Promise((resolve, reject) => {
+            request({
+                    method: 'GET',
+                    uri: "https://graph.facebook.com/v2.6/" + userId + "?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + FB_PAGE_ACCESS_TOKEN
+                },
+                function (error, response) {
+                    if (error) {
+                        console.error('Error while userInfoRequest: ', error);
+                        reject(error);
+                    } else {
+                        console.log('userInfoRequest result: ', response.body);
+                        resolve(response.body);
+                    }
+                });
+        });
+    }
 }
 
 
