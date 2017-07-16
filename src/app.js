@@ -527,7 +527,7 @@ class FacebookBot {
         });
     }
         
-    function userInfoRequest(userId) {
+    userInfoRequest(userId) {
         return new Promise((resolve, reject) => {
             request({
                     method: 'GET',
