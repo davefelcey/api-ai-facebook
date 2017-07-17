@@ -343,7 +343,7 @@ class FacebookBot {
                          }
                          console.log('Response data: ' + response.result.first_name);
                     }
-                    console.log('Result: ' + response.first_name);
+                    console.log('Result: ' + response);
 
                 });
 
