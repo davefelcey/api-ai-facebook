@@ -305,6 +305,7 @@ class FacebookBot {
             
             this.userInfoRequest(sender)
             .then((userInfo)=> {
+                console.log("User info: ", JSON.stringify(userInfo));
                 let apiaiRequest = this.apiAiService.textRequest(text,
                     {
                         sessionId: this.sessionIds.get(sender),
@@ -321,7 +322,7 @@ class FacebookBot {
                             source: "facebook"
                         }
                     });
-                 console.log("User info: ", userInfo.first_name);
+                 console.log("User name: ", userInfo.first_name);
                  this.doApiAiRequest(apiaiRequest, sender);
             });
         }
