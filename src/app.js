@@ -322,7 +322,7 @@ class FacebookBot {
                             source: "facebook"
                         }
                     });
-                 console.log("User name: ", userInfo.first_name);
+                 console.log("User name: ", JSON.parse(userInfo).first_name);
                  this.doApiAiRequest(apiaiRequest, sender);
             });
         }
