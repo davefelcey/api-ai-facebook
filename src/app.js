@@ -341,9 +341,9 @@ class FacebookBot {
                                 this.sendFBMessage(sender, {text: textPart}, callback);
                             });
                          }
-                         console.log('Response data: ' + responseData);
+                         console.log('Response data: ' + response.result.first_name);
                     }
-                    console.log('Result: ' + response.result);
+                    console.log('Result: ' + response.result.first_name);
 
                 });
 
