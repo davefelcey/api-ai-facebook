@@ -315,21 +315,14 @@ class FacebookBot {
                                     facebook_user_name: userInfo.first_name
                                 }
                             }
-                        ]
+                        ],
+                        originalRequest: {
+                            data: event,
+                            source: "facebook"
+                        }
                     });
                  this.doApiAiRequest(apiaiRequest, sender);
             });
-            
-            let apiaiRequest = this.apiAiService.textRequest(text,
-                {
-                    sessionId: this.sessionIds.get(sender),
-                    originalRequest: {
-                        data: event,
-                        source: "facebook"
-                    }
-                });
-
-            this.doApiAiRequest(apiaiRequest, sender);
         }
     }
 
