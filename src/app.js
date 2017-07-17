@@ -317,41 +317,7 @@ class FacebookBot {
                             }
                         ]
                     });
-
-                apiaiRequest.on('response', (response) => {
-                    if (this.isDefined(response.result)) {
-                        let responseText = response.result.fulfillment.speech;
-                        let responseData = response.result.fulfillment.data;
-                        let action = response.result.action;
-
-                        if (this.isDefined(responseData) && this.isDefined(responseData.facebook)) {
-                            try {
-                                console.log('Response as formatted message');
-                                this.sendFBMessage(sender, responseData.facebook);
-                            } catch (err) {
-                                this.sendFBMessage(sender, {text: err.message});
-                            }
-                        } else if (this.isDefined(responseText)) {
-                            console.log('Response as text message');
-                            // facebook API limit for text length is 320,
-                            // so we split message if needed
-                            var splittedText = this.splitResponse(responseText);
-
-                            async.eachSeries(splittedText, (textPart, callback) => {
-                                this.sendFBMessage(sender, {text: textPart}, callback);
-                            });
-                         }
-                         console.log('Response data: ' + response.result.first_name);
-                    }
-                    console.log('Result: ' + JSON.stringify(response));
-
-                });
-
-                apiaiRequest.on('error', (error) => console.error(error));
-                apiaiRequest.end();
-
-            }).catch(err=> {
-                console.error(err);
+                 this.doApiAiRequest(apiaiRequest, sender);
             });
             
             let apiaiRequest = this.apiAiService.textRequest(text,
