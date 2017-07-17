@@ -313,7 +313,7 @@ class FacebookBot {
                             {
                                 name: "generic",
                                 parameters: {
-                                    facebook_user_name: userInfo.first_name
+                                    facebook_user_name: JSON.parse(userInfo).first_name
                                 }
                             }
                         ],
