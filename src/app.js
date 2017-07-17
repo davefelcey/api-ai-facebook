@@ -340,7 +340,7 @@ class FacebookBot {
                             async.eachSeries(splittedText, (textPart, callback) => {
                                 this.sendFBMessage(sender, {text: textPart}, callback);
                             });
-                        
+                         }
                          console.log('Response data: ' + responseData);
                     }
                     console.log('Result: ' + response.result);
